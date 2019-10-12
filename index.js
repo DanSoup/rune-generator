@@ -1,40 +1,28 @@
-// const gridChars = [' ','│','┤','┐','└','┴','┬','├','─','┼','┘','┌']
-const gridChars = [' ','│','┤','┐','└','┴','┬','├','─','┘','┌']
+const fs = require('fs');
 
-const rune = [
+const runeGenerator = require('./runeGenerator.js');
 
-];
+const runeRow = [
+  '', '', '', '', '', '', '', '', ''
+]
 
-for (let y = 0; y < 13; y++) {
+for (let i = 0; i < 25; i++) {
+  let rune = runeGenerator().fullRune
+  while (rune === 'FAIL') {
+    rune = runeGenerator().fullRune
+  }
+
+  for (let j = 0; j < 9; j++) {
+
+    runeRow[j] += rune.split('\n')[j]
   
-  rune[y] = [];
-  
-  for (let x = 0; x < 9; x++) {
-
-    rune[y][x] = (y + x) % 2 === 0
-      ? ' '
-    : Math.random() < 0.5
-      ? ' '
-    : y % 2 === 0
-      ? '─'
-      : '│';
-
   }
 
 }
 
-for (let y = 0; y < 13; y += 2) {
-  for (let x = 0; x < 9; x += 2) {
-    
-      if (!rune[y][x - 1] || rune[y][x - 1] === ' ') {
-        rune[y][x] = 'L';
-      }
 
-  }
-}
 
-const fullRune = rune.reduce((acc, row) => {
-  return acc + '\n' + row.join('');
-}, '')
 
-console.log(fullRune)
+// fs.writeFileSync('runes.txt', rune.replace(/[0X]/g, ' '), 'utf8')
+// fs.writeFileSync('runes.txt', runeRow.join('\n').replace(/[0X]/g, ' '), 'utf8')
+fs.appendFileSync('runes.txt', runeRow.join('\n').replace(/[0X]/g, ' '), 'utf8')
